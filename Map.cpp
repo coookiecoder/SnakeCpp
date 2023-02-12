@@ -3,8 +3,12 @@
 #include "Map.h"
 
 #define APPLE_DATA 1
+#define MAX_SPAWN_TRY 1000
 
 Map::Map(int Size, int AppleNumber) {
+    if (Size * Size < AppleNumber - 5) {
+        return;
+    }
     int HeadLocationX;
     int HeadLocationY;
     int AppleLocationX;
@@ -32,6 +36,8 @@ Map::Map(int Size, int AppleNumber) {
         AppleLocationX = (int) random() % Size;
         AppleLocationY = (int) random() % Size;
         if (AppleLocationX == HeadLocationX && AppleLocationY == HeadLocationY) {
+            Iteration--;
+        } else if (GetAppleMapData(AppleLocationX, AppleLocationY)) {
             Iteration--;
         } else {
             SetAppleMapData(AppleLocationX,AppleLocationY,APPLE_DATA);
@@ -64,6 +70,7 @@ bool Map::GetAlive() {
 
 
 void Map::NextFrameUp() {
+    int SpawnTry;
     int AppleLocationX;
     int AppleLocationY;
     int HeadLocationX;
@@ -80,11 +87,13 @@ void Map::NextFrameUp() {
 
     if (HeadLocationX == 0) {
         Alive = false;
+        std::cout << "you lose in ";
         return;
     }
 
     if (GetSnakeMapData(HeadLocationX - 1, HeadLocationY) != 0) {
         Alive = false;
+        std::cout << "you lose in ";
         return;
     }
 
@@ -93,10 +102,17 @@ void Map::NextFrameUp() {
         for (int Iteration = 0; Iteration < 1; Iteration++) {
             AppleLocationX = (int) random() % this->MapSize;
             AppleLocationY = (int) random() % this->MapSize;
-            if (GetSnakeMapData(AppleLocationX, AppleLocationY) > 0  || GetAppleMapData(AppleLocationX, AppleLocationY) == -1) {
+            if (GetSnakeMapData(AppleLocationX, AppleLocationY) > 0  || GetAppleMapData(AppleLocationX, AppleLocationY) == -1 || GetAppleMapData(AppleLocationX, AppleLocationY)) {
                 Iteration--;
+                SpawnTry = SpawnTry + 1;
             } else {
                 SetAppleMapData(AppleLocationX,AppleLocationY,APPLE_DATA);
+            }
+
+            if (SpawnTry > MAX_SPAWN_TRY) {
+                this->Alive = false;
+                std::cout << "you win in ";
+                return;
             }
         }
         SetAppleMapData(HeadLocationX - 1, HeadLocationY, 0);
@@ -118,6 +134,7 @@ void Map::NextFrameUp() {
 }
 
 void Map::NextFrameDown() {
+    int SpawnTry;
     int AppleLocationX;
     int AppleLocationY;
     int HeadLocationX;
@@ -134,23 +151,33 @@ void Map::NextFrameDown() {
 
     if (HeadLocationX == MapSize) {
         Alive = false;
+        std::cout << "you lose in ";
         return;
     }
 
     if (GetSnakeMapData(HeadLocationX + 1, HeadLocationY) != 0) {
         Alive = false;
+        std::cout << "you lose in ";
         return;
     }
 
     else if (GetAppleMapData(HeadLocationX + 1, HeadLocationY) == APPLE_DATA) {
         SetAppleMapData(HeadLocationX + 1, HeadLocationY, -1);
+        SpawnTry = 0;
         for (int Iteration = 0; Iteration < 1; Iteration++) {
             AppleLocationX = (int) random() % this->MapSize;
             AppleLocationY = (int) random() % this->MapSize;
-            if (GetSnakeMapData(AppleLocationX, AppleLocationY) > 0  || GetAppleMapData(AppleLocationX, AppleLocationY) == -1) {
+            if (GetSnakeMapData(AppleLocationX, AppleLocationY) > 0  || GetAppleMapData(AppleLocationX, AppleLocationY) == -1 || GetAppleMapData(AppleLocationX, AppleLocationY)) {
                 Iteration--;
+                SpawnTry = SpawnTry + 1;
             } else {
                 SetAppleMapData(AppleLocationX,AppleLocationY,APPLE_DATA);
+            }
+
+            if (SpawnTry > MAX_SPAWN_TRY) {
+                this->Alive = false;
+                std::cout << "you win in ";
+                return;
             }
         }
         SetAppleMapData(HeadLocationX + 1, HeadLocationY, 0);
@@ -172,6 +199,7 @@ void Map::NextFrameDown() {
 }
 
 void Map::NextFrameRight() {
+    int SpawnTry;
     int AppleLocationX;
     int AppleLocationY;
     int HeadLocationX;
@@ -188,23 +216,33 @@ void Map::NextFrameRight() {
 
     if (HeadLocationY == MapSize) {
         Alive = false;
+        std::cout << "you lose in ";
         return;
     }
 
     if (GetSnakeMapData(HeadLocationX, HeadLocationY + 1) != 0) {
         Alive = false;
+        std::cout << "you lose in ";
         return;
     }
 
     else if (GetAppleMapData(HeadLocationX, HeadLocationY + 1) == APPLE_DATA) {
         SetAppleMapData(HeadLocationX, HeadLocationY + 1, -1);
+        SpawnTry = 0;
         for (int Iteration = 0; Iteration < 1; Iteration++) {
             AppleLocationX = (int) random() % this->MapSize;
             AppleLocationY = (int) random() % this->MapSize;
-            if (GetSnakeMapData(AppleLocationX, AppleLocationY) > 0 || GetAppleMapData(AppleLocationX, AppleLocationY) == -1) {
+            if (GetSnakeMapData(AppleLocationX, AppleLocationY) > 0  || GetAppleMapData(AppleLocationX, AppleLocationY) == -1 || GetAppleMapData(AppleLocationX, AppleLocationY)) {
                 Iteration--;
+                SpawnTry = SpawnTry + 1;
             } else {
                 SetAppleMapData(AppleLocationX,AppleLocationY,APPLE_DATA);
+            }
+
+            if (SpawnTry > MAX_SPAWN_TRY) {
+                this->Alive = false;
+                std::cout << "you win in ";
+                return;
             }
         }
         SetAppleMapData(HeadLocationX, HeadLocationY + 1, 0);
@@ -226,6 +264,7 @@ void Map::NextFrameRight() {
 }
 
 void Map::NextFrameLeft() {
+    int SpawnTry;
     int AppleLocationX;
     int AppleLocationY;
     int HeadLocationX;
@@ -242,23 +281,33 @@ void Map::NextFrameLeft() {
 
     if (HeadLocationY == 0) {
         Alive = false;
+        std::cout << "you lose in ";
         return;
     }
 
     if (GetSnakeMapData(HeadLocationX, HeadLocationY - 1) != 0) {
         Alive = false;
+        std::cout << "you lose in ";
         return;
     }
 
     else if (GetAppleMapData(HeadLocationX, HeadLocationY - 1) == APPLE_DATA) {
         SetAppleMapData(HeadLocationX, HeadLocationY - 1, -1);
+        SpawnTry = 0;
         for (int Iteration = 0; Iteration < 1; Iteration++) {
             AppleLocationX = (int) random() % this->MapSize;
             AppleLocationY = (int) random() % this->MapSize;
-            if (GetSnakeMapData(AppleLocationX, AppleLocationY) > 0 || GetAppleMapData(AppleLocationX, AppleLocationY) == -1) {
+            if (GetSnakeMapData(AppleLocationX, AppleLocationY) > 0  || GetAppleMapData(AppleLocationX, AppleLocationY) == -1 || GetAppleMapData(AppleLocationX, AppleLocationY)) {
                 Iteration--;
+                SpawnTry = SpawnTry + 1;
             } else {
                 SetAppleMapData(AppleLocationX,AppleLocationY,APPLE_DATA);
+            }
+
+            if (SpawnTry > MAX_SPAWN_TRY) {
+                this->Alive = false;
+                std::cout << "you win in ";
+                return;
             }
         }
         SetAppleMapData(HeadLocationX, HeadLocationY - 1, 0);

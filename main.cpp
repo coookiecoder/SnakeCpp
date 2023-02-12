@@ -1,11 +1,13 @@
 #include <iostream>
 #include "Map.h"
 
+#define MAP_SIZE 6
+
 int main() {
     char Input;
     int Frame = 0;
 
-    Map GameMap(10, 5);
+    Map GameMap(MAP_SIZE, 10);
     GameMap.DisplayMap();
 
     while (GameMap.GetAlive()) {
@@ -24,7 +26,12 @@ int main() {
                 GameMap.NextFrameLeft();
                 break;
         }
-        GameMap.DisplayMap();
+        if (!GameMap.GetAlive()) {
+            std::cout << Frame << " frames\n";
+        } else {
+            GameMap.DisplayMap();
+            Frame = Frame + 1;
+        }
     }
     return 0;
 }
