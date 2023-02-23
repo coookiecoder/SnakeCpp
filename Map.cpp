@@ -6,7 +6,7 @@
 #define MAX_SPAWN_TRY 1000
 
 Map::Map(int Size, int AppleNumber) {
-    if (Size * Size < AppleNumber - 5) {
+    if (Size * Size <= (AppleNumber - 6)) {
         return;
     }
     int HeadLocationX;
@@ -329,31 +329,31 @@ void Map::NextFrameLeft() {
 }
 
 void Map::DisplayMap() {
-    for (int Iteration = 0; Iteration < MapSize + 2; Iteration++) {
-        std::cout << '#';
+    for (int Iteration = 0; Iteration < MapSize + 1; Iteration++) {
+        std::cout << "# ";
     }
 
-    std::cout << std::endl;
+    std::cout << "#" << std::endl;
 
     for (int x = 0; x < MapSize; x++) {
         std::cout << "#";
         for (int y = 0; y < MapSize; y++) {
             if (GetSnakeMapData(x ,y) == 0 && GetAppleMapData(x, y) == 0) {
-                std::cout << " ";
+                std::cout << "  ";
             } else if (GetSnakeMapData(x ,y) == 0 && GetAppleMapData(x, y) == 1) {
-                std::cout << "@";
+                std::cout << " @";
             } else if (GetSnakeMapData(x ,y) > 1 && GetAppleMapData(x, y) == 0) {
-                std::cout << "□";
+                std::cout << " □";
             } else if (GetSnakeMapData(x ,y) == 1 && GetAppleMapData(x, y) == 0) {
-                std::cout << "■";
+                std::cout << " ■";
             }
         }
-        std::cout << "#" << std::endl;
+        std::cout << " #" << std::endl;
     }
 
-    for (int Iteration = 0; Iteration < MapSize + 2; Iteration++) {
-        std::cout << "#";
+    for (int Iteration = 0; Iteration < MapSize + 1; Iteration++) {
+        std::cout << "# ";
     }
 
-    std::cout << std::endl;
+    std::cout << "#" << std::endl;
 }
